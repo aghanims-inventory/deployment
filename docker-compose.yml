@@ -1,0 +1,39 @@
+name: "aghanims-inventory"
+
+services:
+    aghanims-inventory-api:
+        # image: mcr.microsoft.com/dotnet/aspnet:10.0
+        container_name: aghanims-inventory-api
+        build:
+            context: ../api
+            dockerfile: AghanimsInventoryApi/Dockerfile.dev
+        ports:
+            - "47105:8080"
+            - "47106:8081"
+        environment:
+            ASPNETCORE_ENVIRONMENT: Development
+            ConnectionStrings__DbConnection: Server=127.0.0.1,1433;Database=AghanimsInventoryDb;User Id=sa;Password=TestPassword123456;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;Integrated Security=false;
+        deploy:
+            replicas: 1
+        mem_limit: 512m
+        mem_reservation: 256m
+        cpus: 0.5
+        restart: unless-stopped
+
+    aghanims-inventory-mssqldb:
+        image: mcr.microsoft.com/mssql/server:2022-CU21-ubuntu-22.04
+        container_name: aghanims-inventory-mssql-db
+        environment:
+            ACCEPT_EULA: Y
+            SA_PASSWORD: TestPassword123456
+        user: "0:0"
+        ports:
+            - "1433:1433"
+        volumes:
+            - aghanims-inventory-mssqldb-data:/var/opt/mssql/data
+        restart: unless-stopped
+        deploy:
+            replicas: 1
+
+volumes:
+    aghanims-inventory-mssqldb-data:
