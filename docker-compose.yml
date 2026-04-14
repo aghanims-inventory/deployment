@@ -12,7 +12,7 @@ services:
             - "47106:8081"
         environment:
             ASPNETCORE_ENVIRONMENT: Development
-            ConnectionStrings__DbConnection: Server=127.0.0.1,1433;Database=AghanimsInventoryDb;User Id=sa;Password=TestPassword123456;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;Integrated Security=false;
+            ConnectionStrings__DbConnection: "${API_CONNECTION_STRING}"
         deploy:
             replicas: 1
         mem_limit: 512m
@@ -25,7 +25,7 @@ services:
         container_name: aghanims-inventory-mssql-db
         environment:
             ACCEPT_EULA: Y
-            SA_PASSWORD: TestPassword123456
+            SA_PASSWORD: "${DB_PASSWORD}"
         user: "0:0"
         ports:
             - "1433:1433"
